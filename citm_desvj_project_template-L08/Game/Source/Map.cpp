@@ -57,7 +57,7 @@ void Map::Draw()
 
     while (mapLayerItem != NULL) {
 
-        //L06: DONE 7: use GetProperty method to ask each layer if your “Draw” property is true.
+        //L06: DONE 7: use GetProperty method to ask each layer if your “Draw?property is true.
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
 
             for (int x = 0; x < mapLayerItem->data->width; x++)
@@ -194,7 +194,7 @@ bool Map::Load()
     // L07 DONE 3: Create colliders
     // //
     // Later you can create a function here to load and create the colliders from the map
-    PhysBody* c1 = app->physics->CreateRectangle(0 + 256/2, 288 + 64/2, 256, 64, STATIC);
+    PhysBody* c1 = app->physics->CreateRectangle(0 + 2056/2, 288 + 774/2, 2052, 198, STATIC);
     // L07 DONE 7: Assign collider type
     c1->ctype = ColliderType::PLATFORM;
 
