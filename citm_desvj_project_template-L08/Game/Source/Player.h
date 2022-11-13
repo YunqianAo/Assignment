@@ -29,7 +29,12 @@ public:
 
 
 public:
-
+	Animation* currentAnim1 = nullptr;
+	Animation idleAnim1;
+	Animation downAnim1;
+	Animation upAnim1;
+	Animation rightAnim1;
+	Animation leftAnim1;
 private:
 
 	//L02: DONE 1: Declare player parameters

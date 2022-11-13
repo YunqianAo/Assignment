@@ -12,7 +12,24 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
+	name.Create("players");
+	idleAnim1.PushBack({ 0, 0, 14,15  });
+	idleAnim1.loop = true;
+	idleAnim1.speed = 0.001f;
 
+	leftAnim1.PushBack({ 555, 7, 44, 114 });
+	leftAnim1.PushBack({ 683, 7, 44, 114 });
+	leftAnim1.PushBack({ 811, 7, 44, 114 });
+	leftAnim1.PushBack({ 939, 7, 44, 114 });
+	leftAnim1.loop = true;
+	leftAnim1.speed = 0.1f;
+
+	rightAnim1.PushBack({ 1065, 7, 44, 114 });
+	rightAnim1.PushBack({ 1193, 7, 44, 114 });
+	rightAnim1.PushBack({ 1321, 7, 44, 114 });
+	rightAnim1.PushBack({ 1449, 7, 44, 114 });
+	rightAnim1.loop = true;
+	rightAnim1.speed = 0.1f;
 }
 
 Player::~Player() {
@@ -34,12 +51,13 @@ bool Player::Awake() {
 }
 
 bool Player::Start() {
-
+	currentAnim1 = &idleAnim1;
+	
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
-	pbody = app->physics->CreateCircle(position.x+16, position.y+16, 9, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x+16, position.y+16, 8, bodyType::DYNAMIC);
 
 	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this; 
@@ -68,26 +86,20 @@ bool Player::Update()
 		speedY = -150;
 		vel = b2Vec2(0, speedY);
 	}
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		//
-		speedY = -150;
-		vel = b2Vec2(-speed, speedY);
-	}
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		//
-		speedY = -250;
-		vel = b2Vec2(speed, speedY);
+	
 		
-	}
+	
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_UP) {
 		//
 	}
 		
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		currentAnim1 = &leftAnim1;
 		vel = b2Vec2(-speed, -GRAVITY_Y);
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		currentAnim1 = &rightAnim1;
 		vel = b2Vec2(speed, -GRAVITY_Y);
 	}
 
