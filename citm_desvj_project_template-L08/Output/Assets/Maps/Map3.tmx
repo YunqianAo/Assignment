@@ -7,6 +7,9 @@
   <image source="MapMetadata.png" trans="ff00ff" width="67" height="34"/>
  </tileset>
  <layer id="7" name="s" width="151" height="43">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>
@@ -13004,6 +13007,9 @@
   </data>
  </layer>
  <layer id="5" name="mid" width="151" height="43">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>
@@ -19501,6 +19507,9 @@
   </data>
  </layer>
  <layer id="8" name="delante" width="151" height="43">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>
@@ -25998,6 +26007,9 @@
   </data>
  </layer>
  <layer id="6" name="Capa de patrones 4" width="151" height="43">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>
