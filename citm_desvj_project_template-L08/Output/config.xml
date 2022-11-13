@@ -23,12 +23,17 @@
 
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
+<<<<<<< Updated upstream
     <player x="0" y="558" texturepath="Assets/Textures/player.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="416" y="512" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="384" y="352" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="200" y="672" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="500" y="672" texturepath="Assets/Textures/goldCoin.png"/>
+=======
+    <player x="0" y="129" texturepath="Assets/Textures/player.png"/>
+    
+>>>>>>> Stashed changes
   </scene>
 
   <map>
