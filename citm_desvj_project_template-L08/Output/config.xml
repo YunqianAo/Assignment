@@ -25,15 +25,7 @@
   <scene>
 
     <player x="0" y="558" texturepath="Assets/Textures/player.png"/>
-<<<<<<< HEAD
-  
-=======
-    
 
-    <player x="0" y="129" texturepath="Assets/Textures/player.png"/>
-    
-
->>>>>>> 17f8c7f429f1c69e236de56d9c77162abcee6925
   </scene>
 
   <map>
