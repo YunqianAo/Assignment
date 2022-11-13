@@ -13,21 +13,19 @@ Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
 	name.Create("players");
-	idleAnim1.PushBack({ 0, 0, 14,15  });
+	idleAnim1.PushBack({ 1, 0, 14,17  });
 	idleAnim1.loop = true;
 	idleAnim1.speed = 0.001f;
 
-	leftAnim1.PushBack({ 555, 7, 44, 114 });
-	leftAnim1.PushBack({ 683, 7, 44, 114 });
-	leftAnim1.PushBack({ 811, 7, 44, 114 });
-	leftAnim1.PushBack({ 939, 7, 44, 114 });
+	leftAnim1.PushBack({ 1, 36, 14, 17 });
+	leftAnim1.PushBack({ 17,36, 14, 17 });
+	leftAnim1.PushBack({ 33, 36, 14, 17 });
 	leftAnim1.loop = true;
 	leftAnim1.speed = 0.1f;
 
-	rightAnim1.PushBack({ 1065, 7, 44, 114 });
-	rightAnim1.PushBack({ 1193, 7, 44, 114 });
-	rightAnim1.PushBack({ 1321, 7, 44, 114 });
-	rightAnim1.PushBack({ 1449, 7, 44, 114 });
+	rightAnim1.PushBack({ 2, 54, 14, 17 });
+	rightAnim1.PushBack({ 18, 54, 14, 17 });
+	rightAnim1.PushBack({ 34, 54, 14, 17 });
 	rightAnim1.loop = true;
 	rightAnim1.speed = 0.1f;
 }
