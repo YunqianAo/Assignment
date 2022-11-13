@@ -194,11 +194,34 @@ bool Map::Load()
     // L07 DONE 3: Create colliders
     // //
     // Later you can create a function here to load and create the colliders from the map
-    PhysBody* c1 = app->physics->CreateRectangle(0 + 2056/2, 288 + 774/2, 2052, 198, STATIC);
+    PhysBody* c1 = app->physics->CreateRectangle(0 + 2056 / 2, 288 + 774 / 2, 2052, 198, STATIC);
     // L07 DONE 7: Assign collider type
     c1->ctype = ColliderType::PLATFORM;
+    PhysBody* c4 = app->physics->CreateRectangle(0-55*17+5 + 2056 / 2 , 288-90-36 + 774 / 2 , 54, 18, STATIC);
+    c4->ctype = ColliderType::PLATFORM;
+    PhysBody* c5 = app->physics->CreateRectangle(0 - 55 * 17 + 5+72 + 2056 / 2, 288 - 90 - 36-36 + 774 / 2, 54, 18, STATIC);
+    c5->ctype = ColliderType::PLATFORM;
+    PhysBody* c6 = app->physics->CreateRectangle(0 - 55 * 17 + 5 + 72 +72 + 2056 / 2, 288 - 90 - 36 - 36-36 + 774 / 2, 54, 18, STATIC);
+    c6->ctype = ColliderType::PLATFORM;
+    PhysBody* c7 = app->physics->CreateRectangle(0 - 55 * 17 + 5 + 72 + 72+72 + 2056 / 2, 288 - 90 - 36 - 36 - 36-36 + 774 / 2, 54, 18, STATIC);
+    c7->ctype = ColliderType::PLATFORM;
+    PhysBody* c8 = app->physics->CreateRectangle(0 +18*17- 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6*18+288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
+    c8->ctype = ColliderType::PLATFORM;
+    PhysBody* c9 = app->physics->CreateRectangle(0 + 18 * 20 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
+    c9->ctype = ColliderType::PLATFORM;
+    PhysBody* c10 = app->physics->CreateRectangle(0 + 18 * 20 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 3 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
+    c10->ctype = ColliderType::PLATFORM;
+    PhysBody* c11 = app->physics->CreateRectangle(0 + 18 * 26 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 3 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
+    c11->ctype = ColliderType::PLATFORM;
+    PhysBody* c12 = app->physics->CreateRectangle(0 + 18 * 26 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
+    c12->ctype = ColliderType::PLATFORM;
+    PhysBody* c13 = app->physics->CreateRectangle(0 + 18 * 29 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
+    c13->ctype = ColliderType::PLATFORM;
+    PhysBody* c14 = app->physics->CreateRectangle(0 + 18 * 23 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 1 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18, 18, STATIC);
+    c14->ctype = ColliderType::PLATFORM;
 
-    PhysBody* c2 = app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
+
+    PhysBody* c2 = app->physics->CreateRectangle(0 - 55 * 17 + 5 + 72 + 72 + 72+108-8 + 2056 / 2, 288 - 90 - 36 - 36 - 36+10 + 774 / 2, 108, 180, STATIC);
     // L07 DONE 7: Assign collider type
     c2->ctype = ColliderType::PLATFORM;
 
