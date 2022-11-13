@@ -50,10 +50,11 @@ bool Player::Awake() {
 }
 
 bool Player::Start() {
-	currentAnim1 = &idleAnim1;
+	
 	
 	//initilize textures
 	texture = app->tex->Load(texturePath);
+	currentAnim1 = &idleAnim1;
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
 	pbody = app->physics->CreateCircle(position.x, position.y, 8, bodyType::DYNAMIC);
@@ -78,7 +79,7 @@ bool Player::Update()
 	int speed = 5; 
 	int speedY = 5;
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
-
+	currentAnim1 = &idleAnim1;
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 		//
