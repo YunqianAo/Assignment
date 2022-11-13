@@ -192,7 +192,7 @@ bool Map::Load()
     }
     
     // L07 DONE 3: Create colliders
-    // //
+    //Ao Colliders
     // Later you can create a function here to load and create the colliders from the map
     //PhysBody* c1 = app->physics->CreateRectangle(0 + 2056 / 2, 288 + 774 / 2, 2052, 198, STATIC);
     //// L07 DONE 7: Assign collider type

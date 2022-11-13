@@ -4349,7 +4349,7 @@ PUGI__NS_BEGIN
         // delete original buffer if we performed a conversion
         if (own && buffer != contents && contents) impl::xml_memory::deallocate(contents);
 
-        // store buffer for offset_debug
+        // store buffer for offset_
         doc->buffer = buffer;
 
         // parse
