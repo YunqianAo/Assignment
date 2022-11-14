@@ -124,7 +124,7 @@ bool Player::CleanUp()
 }
 bool Player::PostUpdate() {
 	SDL_Rect rect = currentAnim1->GetCurrentFrame();
-	app->render->DrawTexture(texture, position.x, position.y - rect.h, &rect);
+	app->render->DrawTexture(texture, position.x+9, position.y+25 - rect.h, &rect);
 	return true;
 }
 
