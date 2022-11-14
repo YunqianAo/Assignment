@@ -9,7 +9,7 @@
   </renderer>
 
   <window>
-    <resolution width="1024" height="768" scale="2"/>
+    <resolution width="1024" height="768" scale="1"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -24,7 +24,7 @@
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
 
-    <player x="0" y="558" texturepath="Assets/Textures/player3.png"/>
+    <player x="0" y="60" texturepath="Assets/Textures/player3.png"/>
 
   </scene>
 

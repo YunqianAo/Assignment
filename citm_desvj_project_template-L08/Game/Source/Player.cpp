@@ -111,12 +111,18 @@ bool Player::Update()
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	app->render->DrawTexture(texture, position.x , position.y);
-
+	currentAnim1->Update();
 	return true;
 }
 
 bool Player::CleanUp()
 {
+	
+	return true;
+}
+bool Player::PostUpdate() {
+	SDL_Rect rect = currentAnim1->GetCurrentFrame();
+	app->render->DrawTexture(texture, position.x, position.y - rect.h, &rect);
 	return true;
 }
 
