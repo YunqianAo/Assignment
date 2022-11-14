@@ -31,7 +31,7 @@ bool Item::Start() {
 	texture = app->tex->Load(texturePath);
 	
 	// L07 DONE 4: Add a physics to an item - initialize the physics body
-	pbody = app->physics->CreateCircle(position.x + 32, position.y + 32, 9, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x, position.y, 9, bodyType::DYNAMIC);
 
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::ITEM;
