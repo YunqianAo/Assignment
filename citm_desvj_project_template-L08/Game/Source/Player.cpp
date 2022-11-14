@@ -32,7 +32,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 }
 
 Player::~Player() {
-
+	
 }
 
 bool Player::Awake() {
@@ -112,6 +112,7 @@ bool Player::Update()
 
 	app->render->DrawTexture(texture, position.x , position.y);
 	currentAnim1->Update();
+	
 	return true;
 }
 
