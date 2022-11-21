@@ -37,6 +37,10 @@ public:
 	Animation upAnim1;
 	Animation rightAnim1;
 	Animation leftAnim1;
+	//class member variable
+	int remainingJumpSteps;
+
+	
 private:
 
 	//L02: DONE 1: Declare player parameters
@@ -45,6 +49,7 @@ private:
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
+
 
 	int pickCoinFxId;
 

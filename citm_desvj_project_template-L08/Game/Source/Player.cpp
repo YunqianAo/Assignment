@@ -29,6 +29,9 @@ Player::Player() : Entity(EntityType::PLAYER)
 	rightAnim1.PushBack({ 34, 54, 14, 17 });
 	rightAnim1.loop = true;
 	rightAnim1.speed = 0.1f;
+
+	//in constructor
+	remainingJumpSteps = 0;
 }
 
 Player::~Player() {
@@ -84,8 +87,11 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 		//
-		speedY = -150;
-		vel = b2Vec2(0, speedY);
+		  
+			  pbody->body->ApplyForce(vel=b2Vec2(0,90), pbody->body->GetWorldCenter(), true);
+			
+		  
+
 	}
 	
 		
