@@ -86,11 +86,8 @@ bool Player::Update()
 	currentAnim1 = &idleAnim1;
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
-		//
 		  
-	pbody->body->ApplyForce(vel=b2Vec2(0,-900), pbody->body->GetWorldCenter(), true);
-			
-		  
+	pbody->body->ApplyForce(vel=b2Vec2(0,-100), pbody->body->GetWorldCenter(), true);
 
 	}
 	
