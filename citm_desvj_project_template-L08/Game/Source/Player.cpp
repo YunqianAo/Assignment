@@ -87,8 +87,12 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 		  
-	pbody->body->ApplyForce(vel=b2Vec2(0,-100), pbody->body->GetWorldCenter(), true);
-
+	//pbody->body->ApplyForce(vel=b2Vec2(0,-100), pbody->body->GetWorldCenter(), true);
+		/*float impulse = pbody->body -> GetMass() * 10;
+		pbody->body -> ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body -> GetWorldCenter(),true);*/
+		float force = pbody->body -> GetMass() * 10 / (1 / 60.0);
+		force /= 6.0;
+		pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);
 	}
 	
 		
