@@ -95,15 +95,16 @@ bool Player::Update()
 		pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
 		/*vel = pbody->body->GetLinearVelocity();
 		vel.y = 10;*/
-		pbody->body->SetLinearVelocity(vel=b2Vec2(0,-100+GRAVITY_Y));
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		//pbody->body->SetLinearVelocity(vel=b2Vec2(0,-100+GRAVITY_Y));
+		pbody->body->SetLinearVelocity({ vel=b2Vec2(pbody->body->GetLinearVelocity().x, -100.0) });
+		/*if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 			currentAnim1 = &leftAnim1;
 			vel = b2Vec2(-speed, -GRAVITY_Y);
 		}
 		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 			currentAnim1 = &rightAnim1;
 			vel = b2Vec2(speed, -GRAVITY_Y);
-		}
+		}*/
 
 	}
 	
