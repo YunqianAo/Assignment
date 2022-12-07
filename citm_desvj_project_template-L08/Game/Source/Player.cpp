@@ -82,33 +82,9 @@ bool Player::Update()
 
 	int speed = 5; 
 	int speedY = 5;
-	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
-	currentAnim1 = &idleAnim1;
-	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
-		  
-	//pbody->body->ApplyForce(vel=b2Vec2(0, -1000+GRAVITY_Y), pbody->body->GetWorldCenter(), true);
-		/*float impulse = pbody->body -> GetMass() * 10;
-		pbody->body -> ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body -> GetWorldCenter(),true);*/
-		/*float force = pbody->body -> GetMass() * 10 / (1 / 60.0);
-		force /= 6.0;
-		pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
-		/*vel = pbody->body->GetLinearVelocity();
-		vel.y = 10;*/
-		//pbody->body->SetLinearVelocity(vel=b2Vec2(0,-100+GRAVITY_Y));
-		pbody->body->SetLinearVelocity({ vel=b2Vec2(pbody->body->GetLinearVelocity().x, -100.0) });
-		/*if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			currentAnim1 = &leftAnim1;
-			vel = b2Vec2(-speed, -GRAVITY_Y);
-		}
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			currentAnim1 = &rightAnim1;
-			vel = b2Vec2(speed, -GRAVITY_Y);
-		}*/
+	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
-	}
-	
-		
+	currentAnim1 = &idleAnim1;
 	
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_UP) {
 		//
@@ -127,7 +103,7 @@ bool Player::Update()
 				pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
 				/*vel = pbody->body->GetLinearVelocity();
 				vel.y = 10;*/
-			pbody->body->SetLinearVelocity(vel = b2Vec2(-speed, -100 + GRAVITY_Y));
+			//pbody->body->SetLinearVelocity(vel = b2Vec2(-speed, -100 + GRAVITY_Y));
 		}
 	}
 
@@ -144,8 +120,35 @@ bool Player::Update()
 				pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
 				/*vel = pbody->body->GetLinearVelocity();
 				vel.y = 10;*/
-			pbody->body->SetLinearVelocity(vel = b2Vec2(speed, -100 + GRAVITY_Y));
+			//pbody->body->SetLinearVelocity(vel = b2Vec2(speed, -100 + GRAVITY_Y));
 		}
+	}
+
+	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+
+		//pbody->body->ApplyForce(vel=b2Vec2(0, -1000+GRAVITY_Y), pbody->body->GetWorldCenter(), true);
+			/*float impulse = pbody->body -> GetMass() * 10;
+			pbody->body -> ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body -> GetWorldCenter(),true);*/
+			/*float force = pbody->body -> GetMass() * 10 / (1 / 60.0);
+			force /= 6.0;
+			pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
+			/*vel = pbody->body->GetLinearVelocity();
+			vel.y = 10;*/
+			//pbody->body->SetLinearVelocity(vel=b2Vec2(0,-100+GRAVITY_Y));
+			// 
+		vel = b2Vec2(vel.x, -100.0);
+
+		//pbody->body->SetLinearVelocity({ vel=b2Vec2(pbody->body->GetLinearVelocity().x, -100.0) });
+		/*if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			currentAnim1 = &leftAnim1;
+			vel = b2Vec2(-speed, -GRAVITY_Y);
+		}
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			currentAnim1 = &rightAnim1;
+			vel = b2Vec2(speed, -GRAVITY_Y);
+		}*/
+
 	}
 
 	//Set the velocity of the pbody of the player
