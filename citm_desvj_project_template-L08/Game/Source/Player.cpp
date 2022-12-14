@@ -72,6 +72,9 @@ bool Player::Start() {
 	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
+	jumpTimer = false;
+	framesJump = 0;
+
 	return true;
 }
 
@@ -80,8 +83,8 @@ bool Player::Update()
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	int speed = 5; 
-	int speedY = 5;
+	int speed = 3; 
+	int speedY = 3;
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
 	currentAnim1 = &idleAnim1;
@@ -110,22 +113,22 @@ bool Player::Update()
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		currentAnim1 = &rightAnim1;
 		vel = b2Vec2(speed, -GRAVITY_Y);
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+		//if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 
-			//pbody->body->ApplyForce(vel=b2Vec2(0, -1000+GRAVITY_Y), pbody->body->GetWorldCenter(), true);
-				/*float impulse = pbody->body -> GetMass() * 10;
-				pbody->body -> ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body -> GetWorldCenter(),true);*/
-				/*float force = pbody->body -> GetMass() * 10 / (1 / 60.0);
-				force /= 6.0;
-				pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
-				/*vel = pbody->body->GetLinearVelocity();
-				vel.y = 10;*/
-			//pbody->body->SetLinearVelocity(vel = b2Vec2(speed, -100 + GRAVITY_Y));
-		}
+		//	//pbody->body->ApplyForce(vel=b2Vec2(0, -1000+GRAVITY_Y), pbody->body->GetWorldCenter(), true);
+		//		/*float impulse = pbody->body -> GetMass() * 10;
+		//		pbody->body -> ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body -> GetWorldCenter(),true);*/
+		//		/*float force = pbody->body -> GetMass() * 10 / (1 / 60.0);
+		//		force /= 6.0;
+		//		pbody->body -> ApplyForce(b2Vec2(0, force), pbody->body -> GetWorldCenter(),true);*/
+		//		/*vel = pbody->body->GetLinearVelocity();
+		//		vel.y = 10;*/
+		//	//pbody->body->SetLinearVelocity(vel = b2Vec2(speed, -100 + GRAVITY_Y));
+		//}
 	}
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !jumpTimer) {
 
 		//pbody->body->ApplyForce(vel=b2Vec2(0, -1000+GRAVITY_Y), pbody->body->GetWorldCenter(), true);
 			/*float impulse = pbody->body -> GetMass() * 10;
@@ -137,7 +140,14 @@ bool Player::Update()
 			vel.y = 10;*/
 			//pbody->body->SetLinearVelocity(vel=b2Vec2(0,-100+GRAVITY_Y));
 			// 
-		vel = b2Vec2(vel.x, -100.0);
+		/*vel = b2Vec2(vel.x, -100.0);*/
+		vel = b2Vec2(0, -5);
+		
+
+
+		//pbody->body->ApplyForce(b2Vec2(pbody->body->GetPosition().x, -500), pbody->body->GetPosition(), true);
+//		pbody->body->ApplyLinearImpulse(b2Vec2(pbody->body->GetPosition().x, -500), pbody->body->GetPosition(), true);
+		
 
 		//pbody->body->SetLinearVelocity({ vel=b2Vec2(pbody->body->GetLinearVelocity().x, -100.0) });
 		/*if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -152,6 +162,17 @@ bool Player::Update()
 	}
 
 	//Set the velocity of the pbody of the player
+
+	if (vel.y == -5)
+	{
+		framesJump++;
+
+		if (framesJump > 30)
+		{
+			jumpTimer = true;
+			framesJump = 0;
+		}
+	}
 	pbody->body->SetLinearVelocity(vel);
 
 	//Update player position in pixels
@@ -188,6 +209,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
+
+			jumpTimer = false;
 			break;
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");

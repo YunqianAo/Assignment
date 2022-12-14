@@ -53,6 +53,10 @@ private:
 
 	int pickCoinFxId;
 
+	bool jumpTimer;
+	int framesJump;
+
+
 };
 
 #endif // __PLAYER_H__
