@@ -128,7 +128,7 @@ bool Player::Update()
 	}
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT && !jumpTimer) {
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN /*&& !jumpTimer*/) {
 
 		//pbody->body->ApplyForce(vel=b2Vec2(0, -1000+GRAVITY_Y), pbody->body->GetWorldCenter(), true);
 			/*float impulse = pbody->body -> GetMass() * 10;
@@ -140,10 +140,23 @@ bool Player::Update()
 			vel.y = 10;*/
 			//pbody->body->SetLinearVelocity(vel=b2Vec2(0,-100+GRAVITY_Y));
 			// 
-		/*vel = b2Vec2(vel.x, -100.0);*/
-		vel = b2Vec2(0, -5);
 		
+		vel = b2Vec2(pbody->body->GetLinearVelocity().x, 0);
+		pbody->body->SetLinearVelocity(vel);
+		pbody->body->ApplyForce(b2Vec2(0, -500), pbody->body->GetPosition(), true);
+			
+			//vel = b2Vec2(vel.x, -100.0);
+		//vel = b2Vec2(vel.x, -5);
+		//vel = b2Vec2(vel.x, -15);
 
+		////vel = b2Vec2(vel.x, -1);
+		//pbody->body->ApplyForce(b2Vec2(pbody->body->GetPosition().x, -500), pbody->body->GetPosition(), true);
+
+	/*while (framesJump !=15) {
+			pbody->body->ApplyForce(b2Vec2(pbody->body->GetPosition().x, -500), pbody->body->GetPosition(), true);
+			framesJump++;
+		}
+	framesJump = 0;*/
 
 		//pbody->body->ApplyForce(b2Vec2(pbody->body->GetPosition().x, -500), pbody->body->GetPosition(), true);
 //		pbody->body->ApplyLinearImpulse(b2Vec2(pbody->body->GetPosition().x, -500), pbody->body->GetPosition(), true);
@@ -162,17 +175,18 @@ bool Player::Update()
 	}
 
 	//Set the velocity of the pbody of the player
+	
+	//if (vel.y == -5)
+	//{
+	//	framesJump++;
 
-	if (vel.y == -5)
-	{
-		framesJump++;
+	//	if (framesJump > 30)
+	//	{
+	//		jumpTimer = true;
+	//		framesJump = 0;
+	//	}
+	//}
 
-		if (framesJump > 30)
-		{
-			jumpTimer = true;
-			framesJump = 0;
-		}
-	}
 	pbody->body->SetLinearVelocity(vel);
 
 	//Update player position in pixels
