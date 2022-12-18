@@ -52,8 +52,20 @@ bool Scene::Start()
 	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
 	
 	// L03: DONE: Load map
-	app->map->Load();
+	//app->map->Load();
+	bool retLoad = app->map->Load();
 
+	// L12 Create walkability map
+	if (retLoad) {
+		int w, h;
+		uchar* data = NULL;
+
+		bool retWalkMap = app->map->CreateWalkabilityMap(w, h, &data);
+		if (retWalkMap) app->pathfinding->SetMap(w, h, data);
+
+		RELEASE_ARRAY(data);
+
+	}
 	// L04: DONE 7: Set the window title with map/tileset info
 	SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
 		app->map->mapData.width,
@@ -63,6 +75,28 @@ bool Scene::Start()
 		app->map->mapData.tilesets.Count());
 
 	app->win->SetTitle(title.GetString());
+
+	//Sets the camera to be centered in isometric map
+	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+		uint width, height;
+		app->win->GetWindowSize(width, height);
+		app->render->camera.x = width / 2;
+
+		// Texture to highligh mouse position 
+		mouseTileTex = app->tex->Load("Assets/Maps/path.png");
+
+		// Texture to show path origin 
+		originTex = app->tex->Load("Assets/Maps/x.png");
+	}
+
+	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+
+		// Texture to highligh mouse position 
+		mouseTileTex = app->tex->Load("Assets/Maps/path_square_18x18.png");
+
+		// Texture to show path origin 
+		originTex = app->tex->Load("Assets/Maps/x_square_18x18.png");
+	}
 
 	return true;
 }
