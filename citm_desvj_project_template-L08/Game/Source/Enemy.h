@@ -39,7 +39,7 @@ public:
 	Animation leftAnim1;
 	//class member variable
 	int remainingJumpSteps;
-
+	PathFinding* pathFinding = nullptr;
 
 private:
 
