@@ -39,6 +39,8 @@ bool Scene::Awake(pugi::xml_node& config)
 	//L02: DONE 3: Instantiate the player using the entity manager
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
+	enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+	enemy->parameters = config.child("enemy");
 
 	return ret;
 }
@@ -75,6 +77,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	player->Update();
+	enemy->Update();
 
 	// L03: DONE 3: Request App to Load / Save when pressing the keys F5 (save) / F6 (load)
 	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
@@ -169,6 +172,7 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 	player->PostUpdate();
+	enemy->PostUpdate();
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 

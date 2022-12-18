@@ -21,7 +21,6 @@
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Pathfinding.cpp" />
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +70,6 @@
     <ClInclude Include="Source\PQueue.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Source\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
