@@ -12,7 +12,6 @@
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
-	pathFinding = app->pathfinding;
 	name.Create("Enemy");
 	name.Create("enemies");
 	idleAnim1.PushBack({ 1, 0, 14,17 });
