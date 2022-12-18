@@ -188,7 +188,16 @@ bool Player::Update()
 	//}
 
 	pbody->body->SetLinearVelocity(vel);
+	
+	if (position.x <= 1024 / 2)
+	{
+		app->render->camera.x = 0;
+	}
 
+	if (position.x > 1024 / 2 && position.x < (2048 * 2) - 1024 / 2 /*&& cam*/)
+	{
+		app->render->camera.x = -position.x + 1024 - 1024 / 2;
+	}
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
