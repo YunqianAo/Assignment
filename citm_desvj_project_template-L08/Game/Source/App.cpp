@@ -29,6 +29,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	physics = new Physics();
 	scene = new Scene();
 	entityManager = new EntityManager();
+	pathfinding = new PathFinding();
 	map = new Map();
 
 	// Ordered for awake / Start / Update
@@ -41,6 +42,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(physics);
 	AddModule(scene);
 	AddModule(entityManager);
+	AddModule(pathfinding);
 	AddModule(map);
 
 	// Render last to swap buffer
