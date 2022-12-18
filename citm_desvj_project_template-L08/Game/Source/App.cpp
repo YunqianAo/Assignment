@@ -9,6 +9,8 @@
 #include "Map.h"
 #include "Physics.h"
 #include "Pathfinding.h"
+#include "Enemy.h"
+
 
 
 #include "Defs.h"

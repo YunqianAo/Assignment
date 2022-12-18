@@ -8,6 +8,8 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "PathFinding.h"
+#include "Enemy.h"
+
 
 
 #include "Defs.h"

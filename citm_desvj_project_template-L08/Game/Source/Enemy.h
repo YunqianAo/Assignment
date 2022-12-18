@@ -1,5 +1,5 @@
-#ifndef __PLAYER_H__
-#define __PLAYER_H__
+#ifndef __ENEMY_H__
+#define __ENEMY_H__
 
 #include "Entity.h"
 #include "Point.h"
@@ -59,4 +59,4 @@ private:
 
 };
 
-#endif // __PLAYER_H__
+#endif // __ENEMY_H__

@@ -4,6 +4,7 @@
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
+#include "Enemy.h"
 
 #include "Defs.h"
 #include "Log.h"
