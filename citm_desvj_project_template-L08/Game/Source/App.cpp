@@ -8,6 +8,8 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
+#include "Pathfinding.h"
+
 
 #include "Defs.h"
 #include "Log.h"
