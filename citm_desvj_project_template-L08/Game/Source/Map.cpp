@@ -32,13 +32,64 @@ bool Map::Awake(pugi::xml_node& config)
     return ret;
 }
 
+// L12: Create walkability map for pathfinding
+bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
+{
+    bool ret = false;
+    ListItem<MapLayer*>* item;
+    item = mapData.maplayers.start;
+
+    for (item = mapData.maplayers.start; item != NULL; item = item->next)
+    {
+        MapLayer* layer = item->data;
+
+        if (layer->properties.GetProperty("Navigation") != NULL && !layer->properties.GetProperty("Navigation")->value)
+            continue;
+
+        uchar* map = new uchar[layer->width * layer->height];
+        memset(map, 1, layer->width * layer->height);
+
+        for (int y = 0; y < mapData.height; ++y)
+        {
+            for (int x = 0; x < mapData.width; ++x)
+            {
+                int i = (y * layer->width) + x;
+
+                int tileId = layer->Get(x, y);
+                TileSet* tileset = (tileId > 0) ? GetTilesetFromTileId(tileId) : NULL;
+
+                if (tileset != NULL)
+                {
+                    //According to the mapType use the ID of the tile to set the walkability value
+                    if (mapData.type == MapTypes::MAPTYPE_ISOMETRIC && tileId == 25) map[i] = 1;
+                    else if (mapData.type == MapTypes::MAPTYPE_ORTHOGONAL && tileId == 50) map[i] = 1;
+                    else map[i] = 0;
+                }
+                else {
+                    //LOG("CreateWalkabilityMap: Invalid tileset found");
+                    map[i] = 0;
+                }
+            }
+        }
+
+        *buffer = map;
+        width = mapData.width;
+        height = mapData.height;
+        ret = true;
+
+        break;
+    }
+
+    return ret;
+}
+
 void Map::Draw()
 {
-    if(mapLoaded == false)
+    if (mapLoaded == false)
         return;
 
     /*
-    // L04: DONE 6: Iterate all tilesets and draw all their 
+    // L04: DONE 6: Iterate all tilesets and draw all their
     // images in 0,0 (you should have only one tileset for now)
 
     ListItem<TileSet*>* tileset;
@@ -81,8 +132,10 @@ void Map::Draw()
             }
         }
         mapLayerItem = mapLayerItem->next;
-
     }
+
+    //Draw the visited tiles
+    //DrawPath();
 }
 
 // L05: DONE 8: Create a method that translates x,y coordinates from map positions to world positions
@@ -90,8 +143,43 @@ iPoint Map::MapToWorld(int x, int y) const
 {
     iPoint ret;
 
-    ret.x = x * mapData.tileWidth;
-    ret.y = y * mapData.tileHeight;
+    // L08: DONE 1: Add isometric map to world coordinates
+    if (mapData.type == MAPTYPE_ORTHOGONAL)
+    {
+        ret.x = x * mapData.tileWidth;
+        ret.y = y * mapData.tileHeight;
+    }
+    else if (mapData.type == MAPTYPE_ISOMETRIC)
+    {
+        ret.x = (x - y) * (mapData.tileWidth / 2);
+        ret.y = (x + y) * (mapData.tileHeight / 2);
+    }
+
+    return ret;
+}
+
+// L08: DONE 3: Add method WorldToMap to obtain  map coordinates from screen coordinates
+iPoint Map::WorldToMap(int x, int y)
+{
+    iPoint ret(0, 0);
+
+    if (mapData.type == MAPTYPE_ORTHOGONAL)
+    {
+        ret.x = x / mapData.tileWidth;
+        ret.y = y / mapData.tileHeight;
+    }
+    else if (mapData.type == MAPTYPE_ISOMETRIC)
+    {
+        float halfWidth = mapData.tileWidth * 0.5f;
+        float halfHeight = mapData.tileHeight * 0.5f;
+        ret.x = int((x / halfWidth + y / halfHeight) / 2);
+        ret.y = int((y / halfHeight - x / halfWidth) / 2);
+    }
+    else
+    {
+        LOG("Unknown map type");
+        ret.x = x; ret.y = y;
+    }
 
     return ret;
 }
@@ -137,15 +225,15 @@ bool Map::CleanUp()
     LOG("Unloading map");
 
     // L04: DONE 2: Make sure you clean up any memory allocated from tilesets/map
-	ListItem<TileSet*>* item;
-	item = mapData.tilesets.start;
+    ListItem<TileSet*>* item;
+    item = mapData.tilesets.start;
 
-	while (item != NULL)
-	{
-		RELEASE(item->data);
-		item = item->next;
-	}
-	mapData.tilesets.Clear();
+    while (item != NULL)
+    {
+        RELEASE(item->data);
+        item = item->next;
+    }
+    mapData.tilesets.Clear();
 
     // L05: DONE 2: clean up all layer data
     // Remove all layers
@@ -166,16 +254,19 @@ bool Map::Load()
 {
     bool ret = true;
 
+    //Load texture to show the path
+    //tileX = app->tex->Load("Assets/Maps/x.png");
+
     pugi::xml_document mapFileXML;
     pugi::xml_parse_result result = mapFileXML.load_file(mapFileName.GetString());
 
-    if(result == NULL)
+    if (result == NULL)
     {
         LOG("Could not load map xml file %s. pugi error: %s", mapFileName, result.description());
         ret = false;
     }
 
-    if(ret == true)
+    if (ret == true)
     {
         ret = LoadMap(mapFileXML);
     }
@@ -190,113 +281,37 @@ bool Map::Load()
     {
         ret = LoadAllLayers(mapFileXML.child("map"));
     }
-    
+
     // L07 DONE 3: Create colliders
-    //Ao Colliders
     // Later you can create a function here to load and create the colliders from the map
-    //PhysBody* c1 = app->physics->CreateRectangle(0 + 2056 / 2, 288 + 774 / 2, 2052, 198, STATIC);
-    //// L07 DONE 7: Assign collider type
-    //c1->ctype = ColliderType::PLATFORM;
-    //PhysBody* c4 = app->physics->CreateRectangle(0-55*17+5 + 2056 / 2 , 288-90-36 + 774 / 2 , 54, 18, STATIC);
-    //c4->ctype = ColliderType::PLATFORM;
-    //PhysBody* c5 = app->physics->CreateRectangle(0 - 55 * 17 + 5+72 + 2056 / 2, 288 - 90 - 36-36 + 774 / 2, 54, 18, STATIC);
-    //c5->ctype = ColliderType::PLATFORM;
-    //PhysBody* c6 = app->physics->CreateRectangle(0 - 55 * 17 + 5 + 72 +72 + 2056 / 2, 288 - 90 - 36 - 36-36 + 774 / 2, 54, 18, STATIC);
-    //c6->ctype = ColliderType::PLATFORM;
-    //PhysBody* c7 = app->physics->CreateRectangle(0 - 55 * 17 + 5 + 72 + 72+72 + 2056 / 2, 288 - 90 - 36 - 36 - 36-36 + 774 / 2, 54, 18, STATIC);
-    //c7->ctype = ColliderType::PLATFORM;
-    //PhysBody* c8 = app->physics->CreateRectangle(0 +18*17- 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6*18+288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
-    //c8->ctype = ColliderType::PLATFORM;
-    //PhysBody* c9 = app->physics->CreateRectangle(0 + 18 * 20 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
-    //c9->ctype = ColliderType::PLATFORM;
-    //PhysBody* c10 = app->physics->CreateRectangle(0 + 18 * 20 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 3 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
-    //c10->ctype = ColliderType::PLATFORM;
-    //PhysBody* c11 = app->physics->CreateRectangle(0 + 18 * 26 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 3 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
-    //c11->ctype = ColliderType::PLATFORM;
-    //PhysBody* c12 = app->physics->CreateRectangle(0 + 18 * 26 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
-    //c12->ctype = ColliderType::PLATFORM;
-    //PhysBody* c13 = app->physics->CreateRectangle(0 + 18 * 29 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 6 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 54, 54, STATIC);
-    //c13->ctype = ColliderType::PLATFORM;
-    //PhysBody* c14 = app->physics->CreateRectangle(0 + 18 * 23 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 1 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18, 18, STATIC);
-    //c14->ctype = ColliderType::PLATFORM;
-    //PhysBody* c15 = app->physics->CreateRectangle(0 + 18 * 35 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 1 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18*3, 18, STATIC);
-    //c15->ctype = ColliderType::PLATFORM;
-    //PhysBody* c16 = app->physics->CreateRectangle(0 + 18 * 31 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, 2 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18 * 3, 18, STATIC);
-    //c16->ctype = ColliderType::PLATFORM;
-    //PhysBody* c17 = app->physics->CreateRectangle(0 + 18 * 31 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, -2 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18 * 3, 18, STATIC);
-    //c17->ctype = ColliderType::PLATFORM;
-    //PhysBody* c18 = app->physics->CreateRectangle(0 + 18 * 35 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, -5 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18 * 3, 18, STATIC);
-    //c18->ctype = ColliderType::PLATFORM;
-    //PhysBody* c19 = app->physics->CreateRectangle(0 + 9+18 * 39 - 55 * 17 + 5 + 72 + 72 + 72 + 2056 / 2, -0.5 * 18 + 288 - 90 - 36 - 36 - 36 - 36 + 774 / 2, 18 * 4, 18*14, STATIC);
-    //c19->ctype = ColliderType::PLATFORM;
 
-    //PhysBody* c2 = app->physics->CreateRectangle(0 - 55 * 17 + 5 + 72 + 72 + 72+108-8 + 2056 / 2, 288 - 90 - 36 - 36 - 36+10 + 774 / 2, 108, 180, STATIC);
-    //// L07 DONE 7: Assign collider type
-    //c2->ctype = ColliderType::PLATFORM;
-
-
-    //nuevos Colliders mapa 3
-     PhysBody* c1 = app->physics->CreateRectangle(0 + 468/2, 288 + 774 / 2, 468, 198, STATIC);
+    PhysBody* c1 = app->physics->CreateRectangle(224 + 128, 543 + 32, 256, 64, STATIC);
+    // L07 DONE 7: Assign collider type
     c1->ctype = ColliderType::PLATFORM;
-    PhysBody* c2 = app->physics->CreateRectangle(504 + 18 / 2, 630 + 18 / 2, 18, 18, STATIC);
+
+    PhysBody* c2 = app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
+    // L07 DONE 7: Assign collider type
     c2->ctype = ColliderType::PLATFORM;
-    PhysBody* c3 = app->physics->CreateRectangle(540 + 18 / 2, 576 + 18 / 2, 18, 18, STATIC);
+
+    PhysBody* c3 = app->physics->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
+    // L07 DONE 7: Assign collider type
     c3->ctype = ColliderType::PLATFORM;
-    PhysBody* c4 = app->physics->CreateRectangle(360 + 108 / 2, 396 + 180 / 2, 108, 180, STATIC);
-    c4->ctype = ColliderType::PLATFORM;
-    PhysBody* c5 = app->physics->CreateRectangle(594 + 72 / 2, 522 + 234 / 2, 72, 234, STATIC);
-    c5->ctype = ColliderType::PLATFORM;
-    PhysBody* c6 = app->physics->CreateRectangle(792 + 72 / 2, 522 + 234 / 2, 72, 234, STATIC);
-    c6->ctype = ColliderType::PLATFORM;
-    PhysBody* c7 = app->physics->CreateRectangle(648 + 54 / 2, 468 + 288 / 2, 54, 288, STATIC);
-    c7->ctype = ColliderType::PLATFORM;
-    PhysBody* c8 = app->physics->CreateRectangle(774 + 54 / 2, 468 + 288 / 2, 54, 288, STATIC);
-    c8->ctype = ColliderType::PLATFORM;
-    PhysBody* c9 = app->physics->CreateRectangle(828 + 108 / 2, 576 + 180 / 2, 108, 180, STATIC);
-    c9->ctype = ColliderType::PLATFORM;
-    PhysBody* c10 = app->physics->CreateRectangle(1026 + 54 / 2, 504 + 252 / 2, 54, 252, STATIC);
-    c10->ctype = ColliderType::PLATFORM;
-    PhysBody* c11 = app->physics->CreateRectangle(1062 + 504 / 2, 576 + 180 / 2, 504, 180, STATIC);
-    c11->ctype = ColliderType::PLATFORM;
-    PhysBody* c12 = app->physics->CreateRectangle(252 + 54 / 2, 504 + 18 / 2, 54, 18, STATIC);
-    c12->ctype = ColliderType::PLATFORM;
-    PhysBody* c13 = app->physics->CreateRectangle(288 + 54 / 2, 432 + 18 / 2, 54, 18, STATIC);
-    c13->ctype = ColliderType::PLATFORM;
 
-    PhysBody* c14 = app->physics->CreateRectangle(918 + 54 / 2, 468 + 18 / 2, 54, 18, STATIC);
-    c14->ctype = ColliderType::PLATFORM;
-
-    PhysBody* c15 = app->physics->CreateRectangle(1188 + 72 / 2, 306 + 270 / 2, 72, 270, STATIC);
-    c15->ctype = ColliderType::PLATFORM;
-
-    PhysBody* c16 = app->physics->CreateRectangle(1206 + 36 / 2, 270 + 36 / 2, 36, 36, STATIC);
-    c16->ctype = ColliderType::PLATFORM;
-
-    PhysBody* c17 = app->physics->CreateRectangle(1026 + 54 / 2, 414 + 18 / 2, 54, 18, STATIC);
-    c17->ctype = ColliderType::PLATFORM;
-
-    PhysBody* c18 = app->physics->CreateRectangle(1116 + 54 / 2, 342 + 18 / 2, 54, 18, STATIC);
-    c18->ctype = ColliderType::PLATFORM;
-
-
-
-   
-
-    if(ret == true)
+    if (ret == true)
     {
         // L04: DONE 5: LOG all the data loaded iterate all tilesets and LOG everything
-       
+
         LOG("Successfully parsed map XML file :%s", mapFileName.GetString());
-        LOG("width : %d height : %d",mapData.width,mapData.height);
-        LOG("tile_width : %d tile_height : %d",mapData.tileWidth, mapData.tileHeight);
-        
+        LOG("width : %d height : %d", mapData.width, mapData.height);
+        LOG("tile_width : %d tile_height : %d", mapData.tileWidth, mapData.tileHeight);
+
         LOG("Tilesets----");
 
         ListItem<TileSet*>* tileset;
         tileset = mapData.tilesets.start;
 
         while (tileset != NULL) {
-            LOG("name : %s firstgid : %d",tileset->data->name.GetString(), tileset->data->firstgid);
+            LOG("name : %s firstgid : %d", tileset->data->name.GetString(), tileset->data->firstgid);
             LOG("tile width : %d tile height : %d", tileset->data->tileWidth, tileset->data->tileHeight);
             LOG("spacing : %d margin : %d", tileset->data->spacing, tileset->data->margin);
             tileset = tileset->next;
@@ -313,7 +328,7 @@ bool Map::Load()
         }
     }
 
-    if(mapFileXML) mapFileXML.reset();
+    if (mapFileXML) mapFileXML.reset();
 
     mapLoaded = ret;
 
@@ -338,15 +353,27 @@ bool Map::LoadMap(pugi::xml_node mapFile)
         mapData.width = map.attribute("width").as_int();
         mapData.tileHeight = map.attribute("tileheight").as_int();
         mapData.tileWidth = map.attribute("tilewidth").as_int();
+        mapData.type = MAPTYPE_UNKNOWN;
+
+        // L08: DONE 2: Read the prientation of the map
+        mapData.type = MAPTYPE_UNKNOWN;
+        if (strcmp(map.attribute("orientation").as_string(), "isometric") == 0)
+        {
+            mapData.type = MAPTYPE_ISOMETRIC;
+        }
+        if (strcmp(map.attribute("orientation").as_string(), "orthogonal") == 0)
+        {
+            mapData.type = MAPTYPE_ORTHOGONAL;
+        }
     }
 
     return ret;
 }
 
 // L04: DONE 4: Implement the LoadTileSet function to load the tileset properties
-bool Map::LoadTileSet(pugi::xml_node mapFile){
+bool Map::LoadTileSet(pugi::xml_node mapFile) {
 
-    bool ret = true; 
+    bool ret = true;
 
     pugi::xml_node tileset;
     for (tileset = mapFile.child("map").child("tileset"); tileset && ret; tileset = tileset.next_sibling("tileset"))
@@ -455,5 +482,3 @@ Properties::Property* Properties::GetProperty(const char* name)
 
     return p;
 }
-
-
