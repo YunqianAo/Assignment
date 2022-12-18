@@ -17,10 +17,8 @@
 
 ## Developers
 
- - {Dev01} - {Role(s)}
- - {Dev02} - {Role(s)}
- - {Dev03} - {Role(s)}
- - {Dev04} - {Role(s)}
+ - {Yunqian Ao} - {Game Programmer}
+ - {Sergio COrona} - {Game Programmer}
 
 ## License
 
